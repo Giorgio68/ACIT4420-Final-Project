@@ -22,6 +22,6 @@ setup(
         "pytest>=8.3.3",
         "geopy>=2.4.1",
         "networkx>=3.4.2",
-        "matplotlib>=3.9.2"
-    ]
+        "matplotlib>=3.9.2",
+    ],
 )

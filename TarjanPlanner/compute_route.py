@@ -9,9 +9,10 @@ from typing import Optional
 
 _modes_of_transport: dict[str | float] = None
 
+
 def _load_modes(f_name: Optional[Path] = None) -> None:
-    global _modes_of_transport
-    
+    global _modes_of_transport  # pylint: disable=global-statement
+
     if f_name is None:
         f_name = Path(".") / "data" / "mode_of_transport.json"
 
