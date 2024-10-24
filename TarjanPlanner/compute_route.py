@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 
-_MODES_OF_TRANSPORT: list[str | float] = None
+_MODES_OF_TRANSPORT: dict[str | float] = None
 
 def _load_modes(f_name: Optional[Path] = None) -> None:
     if f_name is None:
