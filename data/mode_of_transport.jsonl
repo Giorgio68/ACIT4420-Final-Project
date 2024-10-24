@@ -1,4 +1,0 @@
-{"mode_of_transport": "bus", "speed": 40, "cost_per_km": 2, "transfer_time_min": 5}
-{"mode_of_transport": "train", "speed": 80, "cost_per_km": 5, "transfer_time_min": 2}
-{"mode_of_transport": "bicycle", "speed": 15, "cost_per_km": 0, "transfer_time_min": 1}
-{"mode_of_transport": "walking", "speed": 5, "cost_per_km": 0, "transfer_time_min": 0}
