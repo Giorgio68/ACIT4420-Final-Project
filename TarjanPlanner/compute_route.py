@@ -16,4 +16,13 @@ def _load_modes(f_name: Optional[Path] = None) -> None:
     with open(f_name, "r", encoding="utf-8") as f_json:
         _MODES_OF_TRANSPORT.append(json.loads(f_json))
 
+
 _load_modes()
+
+
+def compute_route():
+    pass
+
+
+def display_route():
+    pass
