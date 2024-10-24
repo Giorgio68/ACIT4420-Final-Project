@@ -8,7 +8,7 @@ from typing import Optional
 from .logger import get_logger
 
 
-class ContactsManager:
+class RelativesManager:
     """
     Class used to store and manage a list of relatives. Relatives can either be added by providing
     a list, or a jsonl filename
