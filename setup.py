@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="ACIT4420 Final Project",
-    version="0.1.0",
+    version="0.2.0",
     author="Giorgio Salvemini",
     author_email="s351995@oslomet.no",
     description=("The produced module for the final project in the subject ACIT4420"),

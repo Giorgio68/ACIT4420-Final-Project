@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Optional
 from .logger import get_logger
+from .exceptions import RMSetupFailed
 
 
 class RelativesManager:
@@ -25,6 +26,13 @@ class RelativesManager:
         """
         Constructor method
         """
+
+        if not relatives_list or not json_fname:
+            raise RMSetupFailed(
+                "No relatives have been provided!",
+                additional_info="Either a list or json filename must be given",
+            )
+
         self._relatives = []
         self._logger = get_logger()
 
@@ -34,13 +42,20 @@ class RelativesManager:
 
         if json_fname:
             # we expect a jsonl file here
-            with open(json_fname, "r", encoding="utf-8") as f_json:
-                # makes a list of each line (a.k.a. each json stored)
-                json_list = list(f_json)
+            try:
+                with open(json_fname, "r", encoding="utf-8") as f_json:
+                    # makes a list of each line (a.k.a. each json stored)
+                    json_list = list(f_json)
 
-                for json_str in json_list:
-                    json_dict = json.loads(json_str)
-                    self._relatives.append(json_dict)
+                    for json_str in json_list:
+                        json_dict = json.loads(json_str)
+                        self._relatives.append(json_dict)
+
+            except FileNotFoundError as e:
+                raise RMSetupFailed(
+                    "An invalid filename for the contacts has been given",
+                    additional_info=f"File name: {json_fname}",
+                ) from e
 
     def get_relative(self, name: str) -> dict[str] | None:
         """
