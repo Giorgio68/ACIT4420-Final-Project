@@ -16,7 +16,7 @@ def log_func_call(f):
     @wraps(f)
     def w(*args, **kwargs):
         logger = get_logger()
-        logger.debug("Function %s has been called", f.__name__)
+        logger.info("Function %s has been called", f.__name__)
 
         ret = f(*args, **kwargs)
 
@@ -38,7 +38,7 @@ def time_func_call(f):
         ret = f(*args, **kwargs)
 
         end_time = time()
-        logger.debug(
+        logger.info(
             "Function %s took %f seconds to execute", f.__name__, end_time - start_time
         )
 
@@ -69,11 +69,11 @@ def cache(f):
             ret = f(*args, **kwargs)
             _cached_calls[fname] = [args, kwargs, ret]
 
-            logger.debug("Caching results from function %s", fname)
+            logger.info("Caching results from function %s", fname)
 
         else:
             ret = _cached_calls[fname][2]
-            logger.debug(
+            logger.info(
                 "Function %s has already been called, returning cached result", fname
             )
 
