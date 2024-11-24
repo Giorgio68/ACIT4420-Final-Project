@@ -72,7 +72,12 @@ class RelativesManager(metaclass=Singleton):
                 ) from e
 
     def add_relative(
-        self, name: str, street_name:str, district: str, latitude: float, longitude: float
+        self,
+        name: str,
+        street_name: str,
+        district: str,
+        latitude: float,
+        longitude: float,
     ) -> None:
         """
         This method allows a user to add a new contact to the contact list
