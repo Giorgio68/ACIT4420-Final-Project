@@ -26,11 +26,16 @@ def _find_identify_all_files(path: str | Path) -> None:
         data["files"] = []
 
         for extension in extensions:
-            for directory in os.walk(path):
-                data["files"].extend([
-                    f"{directory[0]}\\{file}" for file in directory[2] \
-                        if re.search(r"\.{}$".format(extension), file)
-                ])
+            try:
+                for directory in os.walk(path):
+                    data["files"].extend([
+                        f"{directory[0]}\\{file}" for file in directory[2] \
+                            if re.search(r"\.{}$".format(extension), file)
+                    ])
+
+            except PermissionError:
+                _logger.error("No read access to directory %s", path)
+                raise
 
         _logger.debug("Found files %s for category %s", data["files"], typ)
 
