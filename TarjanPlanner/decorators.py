@@ -13,7 +13,7 @@ def log_func_call(f):
     Log a function call
     """
 
-    @wraps
+    @wraps(f)
     def w(*args, **kwargs):
         logger = get_logger()
         logger.debug("Function %s has been called", f.__name__)
@@ -30,7 +30,7 @@ def time_func_call(f):
     Log how long a function took to execute
     """
 
-    @wraps
+    @wraps(f)
     def w(*args, **kwargs):
         logger = get_logger()
         start_time = time()
@@ -55,7 +55,7 @@ def cache(f):
     Cache a function's result. Return the cached result if the function parameters are the same
     """
 
-    @wraps
+    @wraps(f)
     def w(*args, **kwargs):
         global _cached_calls  # pylint: disable=global-variable-not-assigned
         logger = get_logger()
