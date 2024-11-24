@@ -2,11 +2,12 @@
 This module is used to manage a list of contacts, from a list, CSV, JSON or text file
 """
 
+import re
 import json
 from pathlib import Path
 from typing import Optional
 from .logger import get_logger
-from .exceptions import RMSetupFailed
+from .exceptions import RMSetupFailed, RMAddRelativeFaiied
 
 
 class Singleton(type):
@@ -50,8 +51,8 @@ class RelativesManager(metaclass=Singleton):
         self._logger = get_logger()
 
         if relatives_list:
-            self._relatives.extend(relatives_list)
-            self._logger.info("Added relatives to list: %s", relatives_list)
+            for relative in relatives_list:
+                self.add_relative(**relative)
 
         if json_fname:
             # we expect a jsonl file here
@@ -62,13 +63,46 @@ class RelativesManager(metaclass=Singleton):
 
                     for json_str in json_list:
                         json_dict = json.loads(json_str)
-                        self._relatives.append(json_dict)
+                        self.add_relative(**json_dict)
 
             except FileNotFoundError as e:
                 raise RMSetupFailed(
                     "An invalid filename for the contacts has been given",
                     additional_info=f"File name: {json_fname}",
                 ) from e
+
+    def add_relative(
+        self, name: str, district: str, latitude: float, longitude: float
+    ) -> None:
+        """
+        This method allows a user to add a new contact to the contact list
+
+        :param name: The relative's name
+        :param district: The relative's district
+        :param latitude: The relative's latitude
+        :param longitude: The relative's longitude
+        """
+
+        for relative in self._relatives:
+            if relative["name"] == name:
+                self._logger.warning("Contact %s exists already", name)
+                return
+
+        # check that latitude and longitude are floats as expected
+        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", latitude):
+            raise RMAddRelativeFaiied("An invalid latitude was provided")
+
+        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", longitude):
+            raise RMAddRelativeFaiied("An invalid longitude was provided")
+
+        relative = {
+            "name": name,
+            "district": district,
+            "latitude": latitude,
+            "longitude": longitude,
+        }
+        self._relatives.append(relative)
+        self._logger.info("Added relative to list: %s", relative)
 
     def get_relative(self, name: str) -> dict[str] | None:
         """

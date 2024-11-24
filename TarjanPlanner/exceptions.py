@@ -34,6 +34,12 @@ class RMSetupFailed(BaseTarjanException):
     """
 
 
+class RMAddRelativeFaiied(BaseTarjanException):
+    """
+    Used when adding a new contact, and passing invalid parameters
+    """
+
+
 # route computing exceptions
 
 
