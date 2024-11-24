@@ -57,6 +57,7 @@ def cache(f):
 
     @wraps
     def w(*args, **kwargs):
+        global _cached_calls  # pylint: disable=global-variable-not-assigned
         logger = get_logger()
         fname = f.__name__
 
