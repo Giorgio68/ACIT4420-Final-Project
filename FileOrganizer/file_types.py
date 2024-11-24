@@ -3,7 +3,7 @@ Contains all available file types that can be processed
 """
 
 
-types = {
+files = {
     "python": {"extension": ["py", "pyc"]},
     "text": {"extension": ["txt"]},
     "json": {"extension": ["json", "jsonl"]},
