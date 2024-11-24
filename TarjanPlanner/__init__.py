@@ -64,7 +64,7 @@ def start() -> None:
         # import contacts
         if user_input == 1:
             rm = RelativesManager(json_fname=Path(".") / "data" / "relatives.jsonl")
-            logger.info("Imported relatives list")
+            print("Imported relatives list")
 
         # manually add new contact
         elif user_input == 2:
@@ -88,7 +88,7 @@ def start() -> None:
                 logger.error("You must input an integer/float!")
 
             rm.add_relative(name, district, lat, lon)
-            logger.info("Added new relative")
+            print("Added new relative")
 
         # list all relatives
         elif user_input == 3:
@@ -110,7 +110,7 @@ def start() -> None:
                 {37.52631701766444, 126.9326773050091},
                 rm.get_relatives()
             )
-            logger.info("Route calculated")
+            print("Route calculated")
 
         # display route
         elif user_input == 5:
@@ -127,7 +127,7 @@ def start() -> None:
                 continue
 
             save_route(fig)
-            logger.info("Route saved")
+            print("Route saved")
 
         # quit
         elif user_input == 0:
