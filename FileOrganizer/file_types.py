@@ -39,7 +39,11 @@ class Map(dict):
 
     def __setitem__(self, key, value):
         super().__setitem__(key, value)
-        self.__dict__.update({key: value})
+        if isinstance(value, dict):
+            self.__dict__.update({key: type(self)(value)})
+
+        else:
+            self.__dict__.update({key: value})
 
     def __delattr__(self, item):
         self.__delitem__(item)
