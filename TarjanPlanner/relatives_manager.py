@@ -89,10 +89,10 @@ class RelativesManager(metaclass=Singleton):
                 return
 
         # check that latitude and longitude are floats as expected
-        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", latitude):
+        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(latitude)):
             raise RMAddRelativeFaiied("An invalid latitude was provided")
 
-        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", longitude):
+        if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(longitude)):
             raise RMAddRelativeFaiied("An invalid longitude was provided")
 
         relative = {
