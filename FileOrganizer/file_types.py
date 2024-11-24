@@ -2,6 +2,7 @@
 Contains all available file types that can be processed
 """
 
+
 class Map(dict):
     """
     Allows accessing elements using dots
@@ -30,7 +31,7 @@ class Map(dict):
                 else:
                     self[k] = v
 
-    def __getattr__(self, attr, default = None):
+    def __getattr__(self, attr, default=None):
         return self.get(attr, default)
 
     def __setattr__(self, key, value):
@@ -48,40 +49,13 @@ class Map(dict):
         del self.__dict__[key]
 
 
-types = Map({
-    "python": {
-        "extension": [
-            "py", "pyc"
-        ]
-    },
-    "text": {
-        "extension": [
-            "txt"
-        ]
-    },
-    "json" :{
-        "extension": [
-            "json",
-            "jsonl"
-        ]
-    },
-    "executables": {
-        "extension": [
-            "exe"
-        ]
-    },
-    "image": {
-        "extension": [
-            "png",
-            "jpg",
-            "svg"
-            "tiff"
-            "webp"
-        ]
-    },
-    "video": {
-        "extension": [
-            "mp4"
-        ]
+types = Map(
+    {
+        "python": {"extension": ["py", "pyc"]},
+        "text": {"extension": ["txt"]},
+        "json": {"extension": ["json", "jsonl"]},
+        "executables": {"extension": ["exe"]},
+        "image": {"extension": ["png", "jpg", "svg" "tiff" "webp"]},
+        "video": {"extension": ["mp4"]},
     }
-})
+)

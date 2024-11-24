@@ -85,6 +85,7 @@ def calculate_route(start_point: set[float], relatives: list[dict]) -> Figure:
 
     return fig
 
+
 @log_func_call
 def display_route(plot: Figure) -> None:
     """
