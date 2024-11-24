@@ -9,7 +9,20 @@ from .logger import get_logger
 from .exceptions import RMSetupFailed
 
 
-class RelativesManager:
+class Singleton(type):
+    """
+    Ensure we cannot instantiate a class more than once
+    """
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class RelativesManager(metaclass=Singleton):
     """
     Class used to store and manage a list of relatives. Relatives can either be added by providing
     a list, or a jsonl filename
