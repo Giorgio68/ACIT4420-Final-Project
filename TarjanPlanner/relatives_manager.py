@@ -72,7 +72,7 @@ class RelativesManager(metaclass=Singleton):
                 ) from e
 
     def add_relative(
-        self, name: str, district: str, latitude: float, longitude: float
+        self, name: str, street_name:str, district: str, latitude: float, longitude: float
     ) -> None:
         """
         This method allows a user to add a new contact to the contact list
@@ -97,6 +97,7 @@ class RelativesManager(metaclass=Singleton):
 
         relative = {
             "name": name,
+            "street_name": street_name,
             "district": district,
             "latitude": latitude,
             "longitude": longitude,
@@ -133,6 +134,7 @@ class RelativesManager(metaclass=Singleton):
         for relative in self._relatives:
             print(
                 f"Name: {relative['name']},"
+                f"Street name: {relative['street_name']},"
                 f"District: {relative['district']},"
                 f"Lat, Lon: {relative['latitude']}, {relative['longitude']}"
             )
@@ -142,6 +144,7 @@ class RelativesManager(metaclass=Singleton):
 
         for relative in self._relatives:
             repr_str += f"Name: {relative['name']},"
+            repr_str += f"Street name: {relative['street_name']},"
             repr_str += f"District: {relative['district']},"
             repr_str += f"Lat, Lon: {relative['latitude']}, {relative['longitude']}\n"
 
@@ -152,6 +155,7 @@ class RelativesManager(metaclass=Singleton):
 
         for relative in self._relatives:
             repr_str += f"Name: {relative['name']},"
+            repr_str += f"Street name: {relative['street_name']},"
             repr_str += f"District: {relative['district']},"
             repr_str += f"Lat, Lon: {relative['latitude']}, {relative['longitude']}\n"
 
