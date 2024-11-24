@@ -44,7 +44,7 @@ class RelativesManager(metaclass=Singleton):
         self._relatives = []
         self._logger = get_logger()
 
-        if not relatives_list or not json_fname:
+        if not relatives_list and not json_fname:
             self._logger.critical("No relatives have been provided")
             raise RMSetupFailed(
                 "No relatives have been provided!",
