@@ -59,7 +59,7 @@ types = Map(
         "text": {"extension": ["txt"]},
         "json": {"extension": ["json", "jsonl"]},
         "executables": {"extension": ["exe"]},
-        "image": {"extension": ["png", "jpg", "svg" "tiff" "webp"]},
+        "image": {"extension": ["png", "jpg", "svg", "tiff", "webp"]},
         "video": {"extension": ["mp4"]},
     }
 )
