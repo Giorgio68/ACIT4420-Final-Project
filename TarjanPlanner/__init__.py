@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name
 """
 This package is used to plan an efficient path between all of Tarjan's relatives. Package written
-by Giorgio Salvemini as the final project of ACIT4420
+by Giorgio Salvemini for part one of the final project of ACIT4420
 """
 
 from pathlib import Path
@@ -19,6 +19,7 @@ __all__ = [
     "start",
     "RouteCalculationError",
     "RouteDisplayingError",
+    "start"
 ]
 
 
