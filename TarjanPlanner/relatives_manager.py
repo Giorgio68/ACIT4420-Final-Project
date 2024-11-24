@@ -41,14 +41,15 @@ class RelativesManager(metaclass=Singleton):
         Constructor method
         """
 
+        self._relatives = []
+        self._logger = get_logger()
+
         if not relatives_list or not json_fname:
+            self._logger.critical("No relatives have been provided")
             raise RMSetupFailed(
                 "No relatives have been provided!",
                 additional_info="Either a list or json filename must be given",
             )
-
-        self._relatives = []
-        self._logger = get_logger()
 
         if relatives_list:
             for relative in relatives_list:
@@ -66,8 +67,11 @@ class RelativesManager(metaclass=Singleton):
                         self.add_relative(**json_dict)
 
             except FileNotFoundError as e:
+                self._logger.error(
+                    "An invalid filename was given for the relatives' list"
+                )
                 raise RMSetupFailed(
-                    "An invalid filename for the contacts has been given",
+                    "An invalid filename for the relatives' list has been given",
                     additional_info=f"File name: {json_fname}",
                 ) from e
 
@@ -95,9 +99,11 @@ class RelativesManager(metaclass=Singleton):
 
         # check that latitude and longitude are floats as expected
         if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(latitude)):
+            self._logger.error("An invalid latitude was provided")
             raise RMAddRelativeFaiied("An invalid latitude was provided")
 
         if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(longitude)):
+            self._logger.error("An invalid longitude was provided")
             raise RMAddRelativeFaiied("An invalid longitude was provided")
 
         relative = {
