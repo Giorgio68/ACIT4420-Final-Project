@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="ACIT4420 Final Project",
-    version="0.2.0",
+    version="0.4.0",
     author="Giorgio Salvemini",
     author_email="s351995@oslomet.no",
     description=("The produced module for the final project in the subject ACIT4420"),
@@ -21,7 +21,6 @@ setup(
     install_requires=[
         "pytest>=8.3.3",
         "geopy>=2.4.1",
-        "networkx>=3.4.2",
         "matplotlib>=3.9.2",
     ],
 )
