@@ -71,7 +71,7 @@ def calculate_route(start_point: set[float], relatives: list[dict]) -> Figure:
     x, y = zip(*coordinates)
 
     # add labels
-    plt.title("Tarjan's efficient path for gift deliverying")
+    plt.title("Tarjan's efficient path for gift delivering")
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
 
