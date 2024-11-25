@@ -2,7 +2,6 @@
 Contains all available file types that can be processed
 """
 
-
 files = {
     "python": {"extension": ["py", "pyc"]},
     "text": {"extension": ["txt"]},

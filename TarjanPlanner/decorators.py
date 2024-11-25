@@ -2,7 +2,6 @@
 Module containing decorators
 """
 
-
 from time import time
 from functools import wraps
 from .logger import get_logger

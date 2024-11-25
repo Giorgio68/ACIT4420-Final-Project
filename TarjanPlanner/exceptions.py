@@ -34,7 +34,7 @@ class RMSetupFailed(BaseTarjanException):
     """
 
 
-class RMAddRelativeFaiied(BaseTarjanException):
+class RMAddRelativeFailed(BaseTarjanException):
     """
     Used when adding a new contact, and passing invalid parameters
     """

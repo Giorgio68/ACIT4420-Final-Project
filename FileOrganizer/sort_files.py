@@ -2,7 +2,6 @@
 Module containing the logic used to sort files based on type
 """
 
-
 import re
 import os
 import shutil
@@ -28,10 +27,13 @@ def _find_identify_all_files(path: str | Path) -> None:
         for extension in extensions:
             try:
                 for directory in os.walk(path):
-                    data["files"].extend([
-                        f"{directory[0]}\\{file}" for file in directory[2] \
+                    data["files"].extend(
+                        [
+                            f"{directory[0]}\\{file}"
+                            for file in directory[2]
                             if re.search(r"\.{}$".format(extension), file)
-                    ])
+                        ]
+                    )
 
             except PermissionError:
                 _logger.error("No read access to directory %s", path)

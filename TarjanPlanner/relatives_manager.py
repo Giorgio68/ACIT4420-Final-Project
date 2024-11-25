@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Optional
 from .logger import get_logger
-from .exceptions import RMSetupFailed, RMAddRelativeFaiied
+from .exceptions import RMSetupFailed, RMAddRelativeFailed
 
 
 class Singleton(type):
@@ -100,11 +100,11 @@ class RelativesManager(metaclass=Singleton):
         # check that latitude and longitude are floats as expected
         if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(latitude)):
             self._logger.error("An invalid latitude was provided")
-            raise RMAddRelativeFaiied("An invalid latitude was provided")
+            raise RMAddRelativeFailed("An invalid latitude was provided")
 
         if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(longitude)):
             self._logger.error("An invalid longitude was provided")
-            raise RMAddRelativeFaiied("An invalid longitude was provided")
+            raise RMAddRelativeFailed("An invalid longitude was provided")
 
         relative = {
             "name": name,
