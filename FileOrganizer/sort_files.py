@@ -87,7 +87,7 @@ def sort(directory: Optional[str | Path] = None) -> None:
         directory = Path(directory)
 
     if not directory.exists():
-        _logger.error("Non-existant directory was passed: %s", directory)
+        _logger.error("Non-existent directory was passed: %s", directory)
         return
 
     _find_identify_all_files(directory)
