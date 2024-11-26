@@ -87,6 +87,7 @@ class RelativesManager(metaclass=Singleton):
         This method allows a user to add a new contact to the contact list
 
         :param name: The relative's name
+        :param street_name: The relative's street
         :param district: The relative's district
         :param latitude: The relative's latitude
         :param longitude: The relative's longitude
@@ -96,6 +97,18 @@ class RelativesManager(metaclass=Singleton):
             if relative["name"] == name:
                 self._logger.warning("Contact %s exists already", name)
                 return
+
+        if not name:
+            self._logger.error("No name was provided")
+            raise RMAddRelativeFailed("No name was provided")
+
+        if not street_name:
+            self._logger.error("No street_name was provided")
+            raise RMAddRelativeFailed("No street_name was provided")
+
+        if not district:
+            self._logger.error("No district was provided")
+            raise RMAddRelativeFailed("No district was provided")
 
         # check that latitude and longitude are floats as expected
         if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(latitude)):

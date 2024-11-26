@@ -32,7 +32,8 @@ def _find_identify_all_files(path: str | Path) -> None:
                             f"{directory[0]}\\{file}"
                             for file in directory[2]
                             if re.search(
-                                r"\.{}$".format(extension), file  # pylint: disable=consider-using-f-string
+                                r"\.{}$".format(extension),
+                                file,  # pylint: disable=consider-using-f-string
                             )
                         ]
                     )
