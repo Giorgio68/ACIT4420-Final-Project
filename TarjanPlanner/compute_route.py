@@ -12,6 +12,7 @@ from typing import Optional
 import networkx as nx
 from networkx import Graph
 from networkx.algorithms.approximation import traveling_salesman_problem as tsp
+from networkx.algorithms.approximation.traveling_salesman import greedy_tsp
 from geopy.distance import geodesic
 
 # plot
@@ -30,13 +31,14 @@ _transport_network: dict[tuple[int, int], str] = None
 _logger = get_logger()
 
 
+# pylint: disable=too-many-branches,global-statement
 @log_func_call
 def _load_modes(
     f_name_modes: Optional[str | Path] = None,
     f_name_routes: Optional[str | Path] = None,
 ) -> None:
-    global _modes_of_transport  # pylint: disable=global-statement
-    global _transport_network  # pylint: disable=global-statement
+    global _modes_of_transport
+    global _transport_network
 
     # load modes of transport
     if f_name_modes is None:
@@ -106,6 +108,19 @@ def _load_modes(
 _load_modes()
 
 
+def _calculate_distance_km(
+    start: tuple[float, float], end: tuple[float, float]
+) -> float:
+    """
+    Calculates the distance between two sets of coordinates
+
+    :param start: The start point
+    :param end: The end point
+    :return: The distance in KM
+    """
+    return geodesic(start, end).km
+
+
 def _calculate_travel_time(
     start: tuple[float, float], end: tuple[float, float], mode: str
 ) -> float:
@@ -118,7 +133,7 @@ def _calculate_travel_time(
     :param mode: The mode of transport to be used
     :return: The travel time, in minutes
     """
-    distance = geodesic(start, end).km
+    distance = _calculate_distance_km(start, end)
     speed = _modes_of_transport[mode]["speed"]
     transfer_time = _modes_of_transport[mode]["transfer_time_min"]
 
@@ -174,7 +189,7 @@ def _find_optimal_route(points: list[tuple]) -> tuple[Graph, list[float]]:
     graph = _initialize_graph(points)
 
     # cycle=True means we go back to the starting point at the end
-    optimal_route = tsp(graph, cycle=True)
+    optimal_route = tsp(graph, cycle=True, method=greedy_tsp)
 
     _logger.debug("Optimal route: %s", optimal_route)
 
@@ -217,8 +232,18 @@ def calculate_route(
         graph, optimal_route = _find_optimal_route(coordinates)
         optimal_route_points = [coordinates[node] for node in optimal_route]
 
+        print(optimal_route_points)
+
         total_travel_time = sum(
             graph[i][j]["weight"] for i, j in zip(optimal_route[:-1], optimal_route[1:])
+        )
+
+        total_travel_distance = sum(
+            _calculate_distance_km(
+                (optimal_route_points[i][1], optimal_route_points[i][0]),
+                (optimal_route_points[i + 1][1], optimal_route_points[i + 1][0]),
+            )
+            for i in range(len(optimal_route_points) - 1)
         )
 
         # draw the points and label them
@@ -231,9 +256,9 @@ def calculate_route(
 
         labels = {0: "Tarjan"}
         for i, relative in enumerate(relatives):
-            labels[i+1] = relative["street_name"]
+            labels[i + 1] = relative["street_name"]
 
-        nx.draw_networkx_labels(graph, pos, labels, font_size=10)
+        nx.draw_networkx_labels(graph, pos, labels, font_size=7)
 
         # draw the route
         optimal_route_edges = [
@@ -262,7 +287,9 @@ def calculate_route(
 
     # set up the plot itself
     ax.set_title(
-        f"Tarjan's efficient path for gift delivering - Total travel time: {total_travel_time} minutes"
+        "Tarjan's efficient path for gift delivering"
+        f" - Total travel time: {total_travel_time:.2f} minutes"
+        f" - Total distance: {total_travel_distance:.2f} Km"
     )
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")

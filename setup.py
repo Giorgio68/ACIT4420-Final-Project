@@ -10,12 +10,12 @@ def read(fname):
 
 setup(
     name="ACIT4420 Final Project",
-    version="0.4.0",
+    version="1.0.0",
     author="Giorgio Salvemini",
     author_email="s351995@oslomet.no",
     description=("The produced module for the final project in the subject ACIT4420"),
     url="https://github.com/Giorgio68/ACIT4420-Final-Project",
-    packages=["TarjanPlanner"],
+    packages=["TarjanPlanner", "FileOrganizer"],
     long_description=read("README.md"),
     test_suite="TarjanPlanner.tests",
     install_requires=[
