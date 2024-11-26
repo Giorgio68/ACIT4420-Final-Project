@@ -107,7 +107,7 @@ def start() -> None:
 
             # note that the first set corresponds to an address near Han River in Seoul,
             # i.e. Tarjan's home address
-            fig = calculate_route(
+            fig, optimal_route = calculate_route(
                 (37.52631701766444, 126.9326773050091), rm.get_relatives()
             )
             print("Route calculated")
@@ -122,11 +122,11 @@ def start() -> None:
 
         # save plotted route
         elif user_input == 6:
-            if "fig" not in locals():
+            if "fig" not in locals() or "optimal_route" not in locals():
                 logger.warning("You must use option 4 first!")
                 continue
 
-            save_route(fig)
+            save_route(fig, optimal_route)
             print("Route saved")
 
         # quit
