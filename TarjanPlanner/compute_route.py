@@ -231,7 +231,7 @@ def calculate_route(
 
         labels = {0: "Tarjan"}
         for i, relative in enumerate(relatives):
-            labels[i] = relative["street_name"]
+            labels[i+1] = relative["street_name"]
 
         nx.draw_networkx_labels(graph, pos, labels, font_size=10)
 
