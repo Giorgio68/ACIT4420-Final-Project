@@ -13,7 +13,7 @@ relatives_folder = Path(".") / "data"
 relatives_manager = RelativesManager(json_fname=relatives_folder / "relatives.jsonl")
 
 
-class TestContactManager(unittest.TestCase):
+class TestRelativesManager(unittest.TestCase):
     def test_print_contacts(self):
         print(repr(relatives_manager))
         print(relatives_manager.get_relatives())
