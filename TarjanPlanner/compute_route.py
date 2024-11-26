@@ -232,8 +232,6 @@ def calculate_route(
         graph, optimal_route = _find_optimal_route(coordinates)
         optimal_route_points = [coordinates[node] for node in optimal_route]
 
-        print(optimal_route_points)
-
         total_travel_time = sum(
             graph[i][j]["weight"] for i, j in zip(optimal_route[:-1], optimal_route[1:])
         )
