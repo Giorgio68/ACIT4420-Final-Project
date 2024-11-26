@@ -108,7 +108,7 @@ def start() -> None:
             # note that the first set corresponds to an address near Han River in Seoul,
             # i.e. Tarjan's home address
             fig = calculate_route(
-                {37.52631701766444, 126.9326773050091}, rm.get_relatives()
+                (37.52631701766444, 126.9326773050091), rm.get_relatives()
             )
             print("Route calculated")
 
