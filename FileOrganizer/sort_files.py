@@ -31,7 +31,9 @@ def _find_identify_all_files(path: str | Path) -> None:
                         [
                             f"{directory[0]}\\{file}"
                             for file in directory[2]
-                            if re.search(r"\.{}$".format(extension), file)
+                            if re.search(
+                                r"\.{}$".format(extension), file  # pylint: disable=consider-using-f-string
+                            )
                         ]
                     )
 
@@ -53,10 +55,16 @@ def _make_dirs_by_type(path: str | Path) -> None:
         path = Path(path)
 
     for typ in files:
-        # 0o644 is read/write for us, read for everyone else
-        (path / typ).mkdir(mode=0o644, exist_ok=True)
+        try:
+            # 0o644 is read/write for us, read for everyone else
+            (path / typ).mkdir(mode=0o644, exist_ok=True)
 
-        _logger.debug("Created folder %s", path / typ)
+            _logger.debug("Created folder %s", path / typ)
+
+        except OSError:
+            _logger.exception(
+                "The OS denied access when trying to create folder %s, skipping...", typ
+            )
 
 
 def _sort_files_in_dir(path: str | Path) -> None:
@@ -74,6 +82,13 @@ def _sort_files_in_dir(path: str | Path) -> None:
 
             except shutil.Error:
                 _logger.warning("File %s is already sorted, skipping...", file)
+
+            except OSError:
+                _logger.exception(
+                    "OS denied access when trying to move file %s to %s, skipping...",
+                    file,
+                    path / typ,
+                )
 
 
 def sort(directory: Optional[str | Path] = None) -> None:
