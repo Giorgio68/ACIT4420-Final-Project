@@ -12,7 +12,6 @@ from typing import Optional
 import networkx as nx
 from networkx import Graph
 from networkx.algorithms.approximation import traveling_salesman_problem as tsp
-from networkx.algorithms.approximation.traveling_salesman import greedy_tsp
 from geopy.distance import geodesic
 
 # plot
@@ -163,10 +162,17 @@ def _initialize_graph(points: list[tuple]) -> Graph:
         travel_time = _calculate_travel_time(
             (points[start][1], points[start][0]), (points[end][1], points[end][0]), mode
         )
+
+        travel_distance = _calculate_distance_km(
+            (points[start][1], points[start][0]), (points[end][1], points[end][0])
+        )
+
         graph.add_edge(start, end, weight=travel_time)
+        graph[start][end]["travel_time"] = travel_time
+        graph[start][end]["travel_distance"] = travel_distance
         graph[start][end]["mode_of_transport"] = mode
 
-        _logger.debug("Travel time: %s", travel_time)
+        _logger.debug("Distance: %s", travel_distance)
         _logger.debug("Travel mode: %s", mode)
 
     _logger.info("Graph has been initialized")
@@ -189,7 +195,7 @@ def _find_optimal_route(points: list[tuple]) -> tuple[Graph, list[float]]:
     graph = _initialize_graph(points)
 
     # cycle=True means we go back to the starting point at the end
-    optimal_route = tsp(graph, cycle=True, method=greedy_tsp)
+    optimal_route = tsp(graph, cycle=False)
 
     _logger.debug("Optimal route: %s", optimal_route)
 
@@ -232,18 +238,6 @@ def calculate_route(
         graph, optimal_route = _find_optimal_route(coordinates)
         optimal_route_points = [coordinates[node] for node in optimal_route]
 
-        total_travel_time = sum(
-            graph[i][j]["weight"] for i, j in zip(optimal_route[:-1], optimal_route[1:])
-        )
-
-        total_travel_distance = sum(
-            _calculate_distance_km(
-                (optimal_route_points[i][1], optimal_route_points[i][0]),
-                (optimal_route_points[i + 1][1], optimal_route_points[i + 1][0]),
-            )
-            for i in range(len(optimal_route_points) - 1)
-        )
-
         # draw the points and label them
         pos = {i: point for i, point in enumerate(coordinates)}
         node_colors = ["orange"]
@@ -267,6 +261,25 @@ def calculate_route(
             legend[graph[u][v]["mode_of_transport"]] for u, v in optimal_route_edges
         ]
 
+        total_travel_time = sum(
+            graph[i][j]["travel_time"]
+            for i, j in zip(optimal_route[:-1], optimal_route[1:])
+        )
+
+        travel_distances = {
+            edge: _calculate_distance_km(
+                (optimal_route_points[i][1], optimal_route_points[i][0]),
+                (optimal_route_points[i + 1][1], optimal_route_points[i + 1][0]),
+            )
+            for edge, i in zip(
+                optimal_route_edges, range(len(optimal_route_points) - 1)
+            )
+        }
+
+        total_travel_distance = sum(
+            distance for _, distance in travel_distances.items()
+        )
+
         for target, color in zip(optimal_route_edges, edge_colors):
             nx.draw_networkx_edges(
                 graph,
@@ -276,6 +289,9 @@ def calculate_route(
                 width=2,
                 arrows=True,
                 arrowstyle="-|>",
+            )
+            nx.draw_networkx_edge_labels(
+                graph, pos, edge_labels={target: f"{travel_distances[target]:.2f} Km"}
             )
 
     except nx.NetworkXError as e:
