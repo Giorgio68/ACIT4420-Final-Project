@@ -5,13 +5,13 @@ Module used to compute and display the most efficient route between relatives
 # import general libraries
 import re
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Optional
 
 # graph and tsp solver
 import networkx as nx
 from networkx import Graph
-from networkx.algorithms.approximation import traveling_salesman_problem as tsp
 from geopy.distance import geodesic
 
 # plot
@@ -142,6 +142,47 @@ def _calculate_travel_time(
 
 
 @log_func_call
+def _initialize_complete_graph(points: list[tuple]) -> Graph:
+    """
+    Creates an instance of a `networkx.Graph`, initialized it with nodes and edges, and returns it.
+    N.B. This method differs from `_initialize_complete_graph` in the inserted edges: the graph
+    produced by this function is "complete", i.e. every node is connected to every other node on
+    the graph.
+
+    :param points: The list of nodes to be drawn
+    :return: The initialized graph
+    """
+
+    graph = Graph()
+
+    for i, point in enumerate(points):
+        graph.add_node(i, pos=point)
+
+    # edges represent the transportation network between relatives and Tarjan
+    for i in range(len(points)):  # pylint: disable=consider-using-enumerate
+        for j in range(i + 1, len(points)):
+            travel_time = {
+                mode: _calculate_travel_time(
+                    (points[i][1], points[i][0]), (points[j][1], points[j][0]), mode
+                )
+                for mode in _modes_of_transport
+            }
+
+            optimal_mode = min(travel_time, key=travel_time.get)
+            graph.add_edge(i, j, weight=travel_time[optimal_mode])
+            graph[i][j]["travel_time"] = travel_time[optimal_mode]
+            graph[i][j]["mode_of_transport"] = optimal_mode
+
+            _logger.debug("Travel time: %s", travel_time)
+            _logger.debug("Optimal mode: %s", optimal_mode)
+            _logger.debug(
+                "Travel time using optimal mode: %s", travel_time[optimal_mode]
+            )
+
+    return graph
+
+
+@log_func_call
 def _initialize_graph(points: list[tuple]) -> Graph:
     """
     Creates an instance of a `networkx.Graph`, initialized it with nodes and edges, and returns it
@@ -180,6 +221,55 @@ def _initialize_graph(points: list[tuple]) -> Graph:
     return graph
 
 
+# pylint: disable=invalid-name
+@time_func_call
+def _naive_tree_tsp(G: Graph, weight: str = "weight") -> list[int]:
+    """
+    This method implements a naive approach to solving the traveling salesman problem, by computing
+    the best solution across all possible edges. It bases this search on the edges that have been
+    added to the map, making it possible to limit the potential best path. The algorithm works
+    similarly to a Binary Search Tree, although more than two branches for each node are possible.
+    Note that this algorithm uses recursion, which makes it unsuitable for routes with a lot of
+    nodes (>1000).
+
+    :param G: The graph to be used to find the best possible path
+    :param weight: The weight to be used to determine the best path
+    :return: The solution to the TSP
+    """
+
+    best_route = [0]
+    shortest_time = float("inf")
+
+    def recurse_tree(G: Graph, node: int, route: list) -> None:
+        if len(route[0]) == G.number_of_nodes():
+            nonlocal shortest_time, best_route
+            if route[1] < shortest_time:
+                shortest_time = route[1]
+                best_route = route[0]
+
+                _logger.debug(
+                    "Newest shortest route is %.2f, best route is %s",
+                    shortest_time,
+                    best_route,
+                )
+
+            return
+
+        for next_node, data in G[node].items():
+            if next_node in route[0]:
+                continue
+
+            route_copy = deepcopy(route)
+            route_copy[0].append(next_node)
+            route_copy[1] += data[weight]
+
+            recurse_tree(G, next_node, route_copy)
+
+    recurse_tree(G, 0, [best_route, 0])
+
+    return best_route
+
+
 @time_func_call
 @cache
 def _find_optimal_route(points: list[tuple]) -> tuple[Graph, list[float]]:
@@ -194,8 +284,7 @@ def _find_optimal_route(points: list[tuple]) -> tuple[Graph, list[float]]:
 
     graph = _initialize_graph(points)
 
-    # cycle=True means we go back to the starting point at the end
-    optimal_route = tsp(graph, cycle=False)
+    optimal_route = _naive_tree_tsp(graph)
 
     _logger.debug("Optimal route: %s", optimal_route)
 
@@ -250,7 +339,7 @@ def calculate_route(
         for i, relative in enumerate(relatives):
             labels[i + 1] = relative["street_name"]
 
-        nx.draw_networkx_labels(graph, pos, labels, font_size=7)
+        nx.draw_networkx_labels(graph, pos, labels, font_size=6)
 
         # draw the route
         optimal_route_edges = [
@@ -291,7 +380,10 @@ def calculate_route(
                 arrowstyle="-|>",
             )
             nx.draw_networkx_edge_labels(
-                graph, pos, edge_labels={target: f"{travel_distances[target]:.2f} Km"}
+                graph,
+                pos,
+                edge_labels={target: f"{travel_distances[target]:.2f} Km"},
+                font_size=6,
             )
 
     except nx.NetworkXError as e:
