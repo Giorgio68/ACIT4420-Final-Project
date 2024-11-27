@@ -349,8 +349,8 @@ def save_route(
     fname = file_name if file_name else "efficient_route"
 
     with open(f"{fname}.txt", "w", encoding="utf-8") as f:
-        f.write(optimal_route)
+        f.write(str(optimal_route))
 
-    plot.savefig(f"{fname}.svg", format="svg")
+    plot.savefig(f"{fname}.svg", format="svg", bbox_inches="tight")
 
     _logger.info("Route saved")
