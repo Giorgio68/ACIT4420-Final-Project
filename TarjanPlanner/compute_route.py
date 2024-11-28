@@ -50,7 +50,7 @@ def _load_modes(
         with open(f_name_modes, "rb") as f_modes:
             _modes_of_transport = json.loads(f_modes.read())
 
-        for _, mode in _modes_of_transport.items():
+        for mode in _modes_of_transport.values():
             # check that these values are all floats
             if not re.match(r"[+-]?([0-9]*[.])?[0-9]+", str(mode["speed"])):
                 _logger.critical('"speed" is stored incorrectly')
