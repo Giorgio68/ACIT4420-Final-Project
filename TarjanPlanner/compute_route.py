@@ -225,16 +225,15 @@ def _initialize_graph(points: list[tuple]) -> Graph:
 @time_func_call
 def _naive_tree_tsp(G: Graph, weight: str = "weight") -> list[int]:
     """
-    This method implements a naive approach to solving the traveling salesman problem, by computing
-    the best solution across all possible edges. It bases this search on the edges that have been
-    added to the map, making it possible to limit the potential best path. The algorithm works
-    similarly to a Binary Search Tree, although more than two branches for each node are possible.
-    Note that this algorithm uses recursion, which makes it unsuitable for routes with a lot of
-    nodes (>1000).
+    This method implements a depth-first search algorithm to find the best solution to the
+    traveling salesman problem. The nodes and edges used are those that have been created during
+    the graph's initialization. This algorithm uses recursion, which makes it unsuitable for routes
+    with a lot of nodes (>1000) as it will hit python's recursion limit. Time complexity is
+    O(|V|+|E|), where |V| is the number of nodes and |E| is the number of edges
 
     :param G: The graph to be used to find the best possible path
     :param weight: The weight to be used to determine the best path
-    :return: The solution to the TSP
+    :return: The solution to the TSP, as a list of integers matching each node in the path
     """
 
     best_route = [0]
