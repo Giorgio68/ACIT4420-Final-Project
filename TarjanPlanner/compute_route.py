@@ -223,7 +223,7 @@ def _initialize_graph(points: list[tuple]) -> Graph:
 
 # pylint: disable=invalid-name
 @time_func_call
-def _naive_tree_tsp(G: Graph, weight: str = "weight") -> list[int]:
+def _dfs_tsp(G: Graph, weight: str = "weight") -> list[int]:
     """
     This method implements a depth-first search algorithm to find the best solution to the
     traveling salesman problem. The nodes and edges used are those that have been created during
@@ -283,7 +283,7 @@ def _find_optimal_route(points: list[tuple]) -> tuple[Graph, list[float]]:
 
     graph = _initialize_graph(points)
 
-    optimal_route = _naive_tree_tsp(graph)
+    optimal_route = _dfs_tsp(graph)
 
     _logger.debug("Optimal route: %s", optimal_route)
 
