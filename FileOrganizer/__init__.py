@@ -55,7 +55,7 @@ def start() -> None:
 
             files[file_type] = {"extension": ext.split()}
 
-            print("Added new file type: {file_type}")
+            print(f"Added new file type: {file_type}")
 
         # show supported types
         elif user_input == 2:
