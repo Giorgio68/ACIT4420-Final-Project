@@ -69,11 +69,8 @@ def start() -> None:
 
         # manually add new contact
         elif user_input == 2:
-            if "rm" not in locals():
-                logger.warning("You must use option 1 first!")
-                continue
-
             name = input("What is your relative's name?: ")
+            street = input("What is your relative's street?: ")
             district = input("What is your relative's district?: ")
 
             try:
@@ -88,7 +85,22 @@ def start() -> None:
             except ValueError:
                 logger.error("You must input an integer/float!")
 
-            rm.add_relative(name, district, lat, lon)
+            if "rm" not in locals():
+                rm = RelativesManager(
+                    relatives_list=[
+                        {
+                            "name": name,
+                            "street_name": street,
+                            "district": district,
+                            "latitude": lat,
+                            "longitude": lon,
+                        }
+                    ]
+                )
+                print("Added new relative")
+                continue
+
+            rm.add_relative(name, street, district, lat, lon)
             print("Added new relative")
 
         # list all relatives
