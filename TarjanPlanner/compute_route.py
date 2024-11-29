@@ -346,7 +346,7 @@ def calculate_route(
             for i in range(len(optimal_route) - 1)
         ]
         edge_colors = [
-            legend[graph[u][v]["mode_of_transport"]] for u, v in optimal_route_edges
+            legend.get(graph[u][v]["mode_of_transport"], "brown") for u, v in optimal_route_edges
         ]
 
         total_travel_time = sum(
