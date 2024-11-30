@@ -90,6 +90,12 @@ where the key is in the format: "<first> <second>" nodes, and the value is the t
 
 The file organizer can be used to organize files based on their type and extension. File types (such as python files, executables, etc.) are stored in the `file_types.py` module, and can be extended at runtime by selecting the corresponding option in the main menu.
 
+It can be run by calling:
+
+```bash
+python -m FileOrganizer
+```
+
 The program will assume that the directory the user calls it from is the one that is to be sorted, and will proceed to identify all files recursively (i.e. within the subdirectories as well), based on their extension. Files with incorrect/no extension cannot be recognized, and will not be touched by the program, as it assumes the user wishes to not sort them.
 
 Once all registered file types have been found, a folder for each category (python, executables, video, etc.) will be created. Permission for the folder are set to give read/write access to the user running the package, and read access to everyone else.
